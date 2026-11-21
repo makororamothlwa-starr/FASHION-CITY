@@ -7,6 +7,9 @@
 :root{--bg:#090a12;--panel:#151725;--line:#ffffff20;--pink:#ff62b6;--gold:#e9c78d;--muted:#a9abc0}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0%,#45213f 0,transparent 38%),var(--bg);color:#fff;font-family:Inter,system-ui,Arial,sans-serif}button{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line);background:#ffffff10;border-radius:14px;padding:11px 15px}button:hover,button.active{background:#ff62b633;border-color:var(--pink)}header{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;border-bottom:1px solid var(--line);position:sticky;top:0;background:#090a12e8;backdrop-filter:blur(16px);z-index:5}.brand{font-weight:900;letter-spacing:2px}.brand span{color:var(--pink)}.credits{color:var(--gold);font-size:13px}.layout{max-width:1400px;margin:auto;padding:26px 4vw 60px}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:stretch}.panel{background:linear-gradient(145deg,#1c1c2b,#11131e);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 18px 55px #0005}.eyebrow{font-size:11px;letter-spacing:3px;color:var(--pink);font-weight:800}.hero h1{font-size:clamp(36px,6vw,70px);line-height:.98;margin:15px 0}.hero p{color:var(--muted);max-width:560px;line-height:1.6}
 .avatar-stage{min-height:410px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 85%,#e65a9b66,transparent 45%),linear-gradient(150deg,#34213d,#111321 70%)}
 #avatar3d{width:100%;height:390px;display:block;touch-action:pan-y}
+.avatar-controls input[type=file]{color:var(--muted);width:100%}
+.avatar-controls button{font-size:12px;padding:9px 11px}
+.avatar-stage:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,#ffffff12,transparent 32%,transparent 70%,#ff9bd411)}
 .avatar-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.avatar-controls button{font-size:12px;padding:9px 11px}
 .avatar-controls label{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .avatar-controls select{background:#171827;color:white;border:1px solid var(--line);padding:8px;border-radius:10px}
@@ -19,7 +22,7 @@
 <main class="layout">
 <section class="hero">
 <div class="panel"><div class="eyebrow">WELCOME TO YOUR WORLD</div><h1>LIVE YOUR<br><span style="color:var(--pink)">FASHION</span> STORY.</h1><p>Build your style, explore the city, prepare for runway nights and make your own space. Your world starts here.</p><div class="actions"><button class="active" onclick="openArea('wardrobe')">Open wardrobe</button><button onclick="openArea('runway')">Enter runway</button></div><div style="margin-top:20px"><span class="tag">STYLE YOUR AVATAR</span><span class="tag">EXPLORE</span><span class="tag">CREATE</span></div></div>
-<div class="panel"><div class="avatar-stage"><canvas id="avatar3d" aria-label="Interactive 3D avatar"></canvas><div class="avatar-caption">3D AVATAR STUDIO · DRAG TO ROTATE</div></div><div class="avatar-controls"><label>Character <select id="avatarGender"><option value="f">Feminine</option><option value="m">Masculine</option></select></label><label>Skin <select id="avatarSkin"><option value="#8b503b">Deep brown</option><option value="#bd8060">Warm brown</option><option value="#e0ad88">Light</option><option value="#603b30">Rich dark</option></select></label><label>Hair <select id="avatarHair"><option value="#17121b">Black</option><option value="#4b2a1d">Brown</option><option value="#b68a42">Blonde</option><option value="#a52c45">Burgundy</option></select></label><label>Outfit <select id="avatarOutfit"><option value="#252a45">Midnight couture</option><option value="#9d285d">Runway pink</option><option value="#e8e1d8">Ivory gala</option><option value="#191919">Street luxe</option></select></label></div></div>
+<div class="panel"><div class="avatar-stage"><canvas id="avatar3d" aria-label="Interactive 3D avatar"></canvas><div class="avatar-caption">3D AVATAR STUDIO · DRAG TO ROTATE</div></div><div class="avatar-controls"><label>Character <select id="avatarGender"><option value="f">Feminine</option><option value="m">Masculine</option></select></label><label>Skin <select id="avatarSkin"><option value="#8b503b">Deep brown</option><option value="#bd8060">Warm brown</option><option value="#e0ad88">Light</option><option value="#603b30">Rich dark</option></select></label><label>Hair <select id="avatarHair"><option value="#17121b">Black</option><option value="#4b2a1d">Brown</option><option value="#b68a42">Blonde</option><option value="#a52c45">Burgundy</option></select></label><label>Outfit <select id="avatarOutfit"><option value="#252a45">Midnight couture</option><option value="#9d285d">Runway pink</option><option value="#e8e1d8">Ivory gala</option><option value="#191919">Street luxe</option></select></label><label>3D Model <input id="avatarModelFile" type="file" accept=".glb,.gltf,model/gltf-binary,model/gltf+json" style="max-width:150px;font-size:10px"></label><button id="resetAvatar" type="button">Reset avatar</button></div><p class="muted" style="margin:10px 0 0">For a fully realistic character, load a rigged GLB/GLTF avatar model. Models stay in this browser session.</p></div>
 </section>
 <div class="section-title"><div><div class="eyebrow">CHOOSE YOUR DESTINATION</div><h2>Explore Fashion City</h2></div><span class="muted">Tap a space to enter</span></div>
 <section class="tiles">
@@ -44,6 +47,7 @@ function chooseItem(key,i){const d=data[key];const chosen=d.items[i];document.ge
 
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
 const canvas=document.querySelector('#avatar3d');
 const scene=new THREE.Scene();scene.background=new THREE.Color('#21182b');
 const camera=new THREE.PerspectiveCamera(32,1,.1,100);camera.position.set(0,1.65,5.6);
@@ -53,6 +57,9 @@ const key=new THREE.DirectionalLight(0xffe1ee,3.1);key.position.set(3,5,4);key.c
 const rim=new THREE.PointLight(0xff62b6,30,8);rim.position.set(-2,2,1);scene.add(rim);
 const floor=new THREE.Mesh(new THREE.CircleGeometry(2,64),new THREE.MeshStandardMaterial({color:0x35243c,roughness:.8}));floor.rotation.x=-Math.PI/2;floor.position.y=-.02;floor.receiveShadow=true;scene.add(floor);
 const root=new THREE.Group();scene.add(root);
+const importedRoot=new THREE.Group();scene.add(importedRoot);
+let importedMixer=null, importedModel=null;
+const gltfLoader=new GLTFLoader();
 const mat=(color,roughness=.65)=>new THREE.MeshStandardMaterial({color,roughness});
 let skin=mat('#8b503b'),hairMat=mat('#17121b'),cloth=mat('#252a45'),gold=mat('#d5ae75',.25);
 function sphere(parent,x,y,z,sx,sy,sz,material){const m=new THREE.Mesh(new THREE.SphereGeometry(1,32,24),material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;parent.add(m);return m}
@@ -78,9 +85,28 @@ if(feminine){sphere(root,0,.83,0,.31,.23,.22,cloth)}
 const chain=new THREE.Mesh(new THREE.TorusGeometry(.13,.012,8,40),gold);chain.position.set(0,1.48,.18);root.add(chain);
 }
 buildAvatar();
-for(const id of ['avatarGender','avatarSkin','avatarHair','avatarOutfit'])document.getElementById(id).addEventListener('change',buildAvatar);
+for(const id of ['avatarGender','avatarSkin','avatarHair','avatarOutfit'])document.getElementById(id).addEventListener('change',()=>{root.visible=true;buildAvatar();});
+document.getElementById('resetAvatar').addEventListener('click',()=>{importedRoot.clear();importedModel=null;importedMixer=null;root.visible=true;});
+document.getElementById('avatarModelFile').addEventListener('change',async event=>{
+ const file=event.target.files?.[0]; if(!file)return;
+ const notice=document.querySelector('.avatar-controls').nextElementSibling;
+ notice.textContent='Loading your 3D character…';
+ try{
+  const buffer=await file.arrayBuffer();
+  const gltf=await new Promise((resolve,reject)=>gltfLoader.parse(buffer,'',resolve,reject));
+  importedRoot.clear(); importedModel=gltf.scene;
+  const box=new THREE.Box3().setFromObject(importedModel), size=box.getSize(new THREE.Vector3()), center=box.getCenter(new THREE.Vector3());
+  const scale=2.35/Math.max(size.y,.001); importedModel.scale.setScalar(scale);
+  importedModel.position.set(-center.x*scale,-box.min.y*scale,-center.z*scale);
+  importedModel.traverse(obj=>{if(obj.isMesh){obj.castShadow=true;obj.receiveShadow=true;}});
+  importedRoot.add(importedModel);root.visible=false;
+  importedMixer=gltf.animations.length?new THREE.AnimationMixer(importedModel):null;
+  if(importedMixer){const clip=gltf.animations[0];importedMixer.clipAction(clip).play();}
+  notice.textContent='3D character loaded: '+file.name+'. Drag to rotate. '+(gltf.animations.length?'Animation detected.':'No built-in animation found.');
+ }catch(err){notice.textContent='Could not load this model. Please choose a valid .glb or .gltf avatar file.';console.error(err);}
+});
 let dragging=false,lastX=0,rot=0;canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(dragging){rot+=(e.clientX-lastX)*.012;lastX=e.clientX;root.rotation.y=rot}});canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(canvas);resize();
-const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const t=clock.getElapsedTime();root.position.y=Math.sin(t*1.5)*.018;root.rotation.y=rot+Math.sin(t*.45)*.035;renderer.render(scene,camera)}animate();
+const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=clock.getDelta(),t=clock.elapsedTime;root.position.y=Math.sin(t*1.5)*.018;root.rotation.y=rot+Math.sin(t*.45)*.035;importedRoot.rotation.y=rot+Math.sin(t*.45)*.035;if(importedMixer)importedMixer.update(dt);renderer.render(scene,camera)}animate();
 </script>
 </body></html>
