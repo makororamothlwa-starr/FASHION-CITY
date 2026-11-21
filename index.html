@@ -45,13 +45,19 @@ function openArea(key){const d=data[key];document.getElementById('workspace').cl
 function chooseItem(key,i){const d=data[key];const chosen=d.items[i];document.getElementById('notice').textContent='Selected: '+chosen+'. '+d.note;document.querySelectorAll('#area-content button').forEach((b,n)=>b.classList.toggle('active',n===i));}
 </script>
 
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 <script type="module">
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import * as THREE from 'three';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
 const canvas=document.querySelector('#avatar3d');
+const stage=canvas?.parentElement;
+if(!canvas) throw new Error('Avatar canvas missing');
 const scene=new THREE.Scene();scene.background=new THREE.Color('#21182b');
 const camera=new THREE.PerspectiveCamera(32,1,.1,100);camera.position.set(0,1.65,5.6);
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 scene.add(new THREE.HemisphereLight(0xffe8f5,0x34243c,2));
 const key=new THREE.DirectionalLight(0xffe1ee,3.1);key.position.set(3,5,4);key.castShadow=true;scene.add(key);
 const rim=new THREE.PointLight(0xff62b6,30,8);rim.position.set(-2,2,1);scene.add(rim);
@@ -106,7 +112,7 @@ document.getElementById('avatarModelFile').addEventListener('change',async event
  }catch(err){notice.textContent='Could not load this model. Please choose a valid .glb or .gltf avatar file.';console.error(err);}
 });
 let dragging=false,lastX=0,rot=0;canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(dragging){rot+=(e.clientX-lastX)*.012;lastX=e.clientX;root.rotation.y=rot}});canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
-function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(canvas);resize();
+function resize(){const w=Math.max(1,canvas.clientWidth),h=Math.max(1,canvas.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}if('ResizeObserver' in window)new ResizeObserver(resize).observe(canvas);window.addEventListener('resize',resize);resize();
 const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=clock.getDelta(),t=clock.elapsedTime;root.position.y=Math.sin(t*1.5)*.018;root.rotation.y=rot+Math.sin(t*.45)*.035;importedRoot.rotation.y=rot+Math.sin(t*.45)*.035;if(importedMixer)importedMixer.update(dt);renderer.render(scene,camera)}animate();
 </script>
 </body></html>
