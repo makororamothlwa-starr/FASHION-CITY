@@ -66,6 +66,23 @@ button:hover,button.active{background:linear-gradient(135deg,#b94e91,#783b78);bo
 }
 @media(max-width:390px){.avatar-controls{grid-template-columns:1fr 1fr}.tile{padding:13px}.credits{font-size:11px}}
 
+
+/* Interactive apartment interior */
+.apartment-shell{display:grid;grid-template-columns:210px minmax(0,1fr);gap:16px;margin-top:18px}
+.room-nav{display:grid;gap:8px;align-content:start}
+.room-nav button{width:100%;text-align:left;border-radius:13px;padding:12px 14px}
+.room-view{position:relative;min-height:390px;overflow:hidden;border-radius:22px;border:1px solid #ffffff30;background:linear-gradient(180deg,#d9b5cf 0%,#765879 48%,#292037 49%,#161321 100%);padding:22px;display:flex;flex-direction:column;justify-content:space-between}
+.room-view:before{content:"";position:absolute;inset:0 0 44% 0;background:linear-gradient(90deg,transparent 48%,#ffffff22 49%,transparent 50%),linear-gradient(0deg,transparent 48%,#ffffff22 49%,transparent 50%),linear-gradient(110deg,#ffffff15,#ffffff00);background-size:180px 130px;opacity:.7}
+.room-view>*{position:relative}
+.room-heading{font-size:11px;letter-spacing:3px;color:#ffe4f3}
+.room-title{font-size:clamp(25px,4vw,38px);font-weight:750;color:#fff;text-shadow:0 3px 18px #0008}
+.room-furniture{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.room-object{background:#100d19c9;border:1px solid #ffffff38;border-radius:15px;padding:15px 10px;color:#fff;text-align:center;min-height:90px}
+.room-object span{display:block;font-size:27px;margin-bottom:6px}
+.room-object small{color:#e2d6e7;font-size:11px}
+.room-status{padding:12px 15px;border-radius:12px;background:#090711d9;border:1px solid #ffffff2b;color:#f6d9eb;font-size:13px}
+@media(max-width:650px){.apartment-shell{grid-template-columns:1fr}.room-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.room-view{min-height:370px;padding:16px}.room-furniture{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
@@ -92,7 +109,11 @@ runway:{title:'Fashion Week',desc:'Choose a show and get ready for the runway.',
 apartment:{title:'My Apartment',desc:'Make your home feel like yours.',items:['Living Room','Kitchen','Bedroom','Walk-in Closet','Balcony'],note:'Room controls are interactive previews. Furniture placement and saving are coming later.'},
 city:{title:'City Rides',desc:'Choose an in-game destination for your city trip.',items:['Fashion District','Downtown','Beachfront','Skyline Plaza','Runway Arena'],note:'City rides are simulated inside the game; no real-world ride booking or payments.'}
 };
-function openArea(key){const d=data[key];document.getElementById('workspace').classList.add('show');document.getElementById('area-eyebrow').textContent=key.toUpperCase();document.getElementById('area-title').textContent=d.title;document.getElementById('area-desc').textContent=d.desc;document.getElementById('notice').textContent=d.note;document.getElementById('area-content').innerHTML='<div class="actions">'+d.items.map((x,i)=>'<button onclick="chooseItem('+JSON.stringify(key)+','+i+')">'+x+'</button>').join('')+'</div>';document.getElementById('workspace').scrollIntoView({behavior:'smooth',block:'start'});}
+function openArea(key){const d=data[key];document.getElementById('workspace').classList.add('show');document.getElementById('area-eyebrow').textContent=key.toUpperCase();document.getElementById('area-title').textContent=d.title;document.getElementById('area-desc').textContent=d.desc;if(key==='apartment'){openApartment();return;}document.getElementById('notice').textContent=d.note;document.getElementById('area-content').innerHTML='<div class="actions">'+d.items.map((x,i)=>'<button onclick="chooseItem('+JSON.stringify(key)+','+i+')">'+x+'</button>').join('')+'</div>';document.getElementById('workspace').scrollIntoView({behavior:'smooth',block:'start'});}
+const homeRooms=[{name:'Living room',icon:'🛋️',objects:[['🛋️','Sofa','You sit and relax on the sofa.'],['📺','Television','The living-room TV is switched on.'],['🔊','Sound system','Music is playing in your apartment.']]},{name:'Kitchen',icon:'🍳',objects:[['🧊','Refrigerator','You opened the refrigerator.'],['🍽️','Kitchen island','You prepared a virtual snack.'],['☕','Coffee machine','Your virtual coffee is ready.']]},{name:'Bedroom',icon:'🛏️',objects:[['🛏️','Bed','You rested in your bedroom.'],['💄','Dressing table','Your dressing table is ready.'],['🪟','Window','You opened the bedroom curtains.']]},{name:'Walk-in closet',icon:'👗',objects:[['👗','Outfit rack','Wardrobe opened: choose an outfit in Style your avatar.'],['👠','Shoes','Shoe collection opened.'],['👜','Accessories','Accessories collection opened.']]},{name:'Bathroom',icon:'🛁',objects:[['🚿','Shower','The shower is running.'],['🪞','Mirror','You are checking your look in the mirror.'],['🧼','Sink','The bathroom sink is ready.']]},{name:'Balcony',icon:'🌆',objects:[['🌇','City view','You are enjoying the city view.'],['🪑','Outdoor seat','You sat outside on the balcony.'],['💡','Balcony lights','Balcony lights switched on.']]},{name:'Home office',icon:'💻',objects:[['🖥️','Computer','Your home computer is switched on.'],['🎮','Gaming setup','Your gaming setup is ready.'],['📚','Bookshelf','You browsed the bookshelf.']]}];
+function openApartment(){document.getElementById('notice').textContent='Welcome home. Choose a room, then tap an object to interact with it.';document.getElementById('area-content').innerHTML='<div class="apartment-shell"><nav class="room-nav" id="roomNav">'+homeRooms.map((r,i)=>'<button onclick="showRoom('+i+')" class="'+(i===0?'active':'')+'">'+r.icon+' '+r.name+'</button>').join('')+'</nav><div><div class="room-view"><div><div class="room-heading">YOUR FASHION CITY HOME</div><div class="room-title" id="roomTitle">Living room</div></div><div class="room-furniture" id="roomObjects"></div><div class="room-status" id="roomStatus">Choose something in the room to interact with it.</div></div></div></div>';showRoom(0);document.getElementById('workspace').scrollIntoView({behavior:'smooth',block:'start'});}
+function showRoom(i){const r=homeRooms[i];document.getElementById('roomTitle').textContent=r.name;document.getElementById('roomObjects').innerHTML=r.objects.map((o,j)=>'<button class="room-object" onclick="interactHome('+i+','+j+')"><span>'+o[0]+'</span>'+o[1]+'</button>').join('');document.querySelectorAll('#roomNav button').forEach((b,n)=>b.classList.toggle('active',n===i));document.getElementById('roomStatus').textContent='You are in the '+r.name+'. Tap an item to interact.';}
+function interactHome(i,j){const o=homeRooms[i].objects[j];document.getElementById('roomStatus').textContent=o[2];}
 function chooseItem(key,i){const d=data[key];const chosen=d.items[i];document.getElementById('notice').textContent='Selected: '+chosen+'. '+d.note;document.querySelectorAll('#area-content button').forEach((b,n)=>b.classList.toggle('active',n===i));}
 </script>
 
