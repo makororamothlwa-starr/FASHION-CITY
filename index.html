@@ -101,6 +101,43 @@ button:hover,button.active{background:linear-gradient(135deg,#b94e91,#783b78);bo
 .saved-look{padding:12px 15px;border-radius:14px;background:#ffffff0b;border:1px solid #ffffff24;font-size:12px}
 @media(max-width:760px){.wardrobe-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dress-intro{min-height:310px}.wardrobe-bottom{align-items:stretch}.wardrobe-bottom button{flex:1}}
 
+
+/* Apple-inspired FASHION CITY interface */
+:root{color-scheme:light;--bg:#f5f5f7;--panel:#ffffffd9;--line:#d2d2d780;--pink:#d94d91;--gold:#8b6b35;--muted:#6e6e73}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 50% -15%,#ffffff 0,transparent 48%),linear-gradient(180deg,#f5f5f7,#ececf1 72%,#f7f7f9);color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;letter-spacing:-.015em}
+header{background:#f5f5f7d9;border-bottom:1px solid #d2d2d780;box-shadow:0 1px 0 #ffffffaa;backdrop-filter:saturate(180%) blur(24px);-webkit-backdrop-filter:saturate(180%) blur(24px)}
+.brand{color:#1d1d1f;letter-spacing:-.04em;font-weight:750}.brand span{color:#d94d91}
+.credits{color:#6e6e73}
+.layout{max-width:1280px}
+.panel,.workspace{background:#ffffffc9;border:1px solid #ffffffd9;border-radius:28px;box-shadow:0 8px 32px #1d1d1f0d,0 1px 3px #1d1d1f0a;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.hero>.panel:first-child{background:linear-gradient(145deg,#ffffffed,#f4f1f6eF);color:#1d1d1f}
+.hero h1{letter-spacing:-.065em;color:#1d1d1f}
+.hero p,.muted{color:#6e6e73}
+.eyebrow{color:#c33c82;letter-spacing:.18em}
+.hero>.panel:nth-child(2){background:#ffffffc9}
+.avatar-stage{background:radial-gradient(ellipse at 50% 85%,#f5c9df 0,transparent 48%),linear-gradient(145deg,#f1edf4,#e5e5eb 70%);border:1px solid #ffffff;box-shadow:inset 0 1px 0 #fff,0 8px 24px #1d1d1f0b}
+#avatar3d{border-radius:20px}
+.avatar-caption{color:#5e5964}
+.avatar-controls label{color:#515158}
+.avatar-controls select{background:#f5f5f7;color:#1d1d1f;border:1px solid #d2d2d7;border-radius:12px}
+button{background:#f5f5f7;color:#1d1d1f;border:1px solid #d2d2d7;border-radius:999px;box-shadow:0 1px 2px #0000000a;transition:background .18s,transform .18s,box-shadow .18s}
+button:hover,button.active{background:#e9e9ee;color:#1d1d1f;border-color:#b9b9c1;transform:translateY(-1px);box-shadow:0 4px 12px #00000012}
+button.primary,.actions button:first-child{background:#1d1d1f;color:white;border-color:#1d1d1f}
+button.primary:hover,.actions button:first-child:hover{background:#3a3a3c}
+.tiles{gap:16px}
+.tile{background:linear-gradient(145deg,#ffffff,#f4f4f7);color:#1d1d1f;border:1px solid #e5e5ea;border-radius:22px;box-shadow:0 4px 18px #0000000a}
+.tile strong{color:#1d1d1f}.tile small{color:#6e6e73}
+.tile:hover{border-color:#d4a0bd;box-shadow:0 10px 28px #00000012}
+.notice{background:#f5f5f7;border:1px solid #e5e5ea;color:#6e6e73}
+.tag{background:#f5f5f7;color:#8b6b35;border-color:#e3d5bb}
+.section-title h2{color:#1d1d1f;letter-spacing:-.04em}
+.footer{color:#86868b}
+#wardrobeGrid .wardrobe-item,.saved-look{background:#f5f5f7;color:#1d1d1f;border:1px solid #e5e5ea;border-radius:16px}
+#wardrobeGrid .wardrobe-item:hover,.saved-look:hover{background:#ececf1;border-color:#c8c8d0}
+#wardrobeStudio{background:#ffffffd9}
+@media(prefers-color-scheme:dark){/* Keep the requested bright Apple-like appearance consistent */color-scheme:light}
+
 </style>
 </head>
 <body>
